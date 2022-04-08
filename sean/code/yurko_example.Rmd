@@ -28,7 +28,7 @@ Please download the final project data from Canvas. If this Rmarkdown file is lo
 The final project data are read in the code chunk below.  
 
 ```{r, read_data_01}
-df_all <- readr::read_csv("final_project_train.csv", col_names = TRUE)
+df_all <- readr::read_csv("../data/final_project_train.csv", col_names = TRUE)
 ```
 
 The code chunk output shows the printed summary information associated with the `readr::read_csv()` call. It tells us 677 rows and 38 columns have been read. Of those 38 columns, 3 are `chr` (string or character) data types and 35 are `dbl` (numeric) data types. The `glimpse()` function is a useful function for getting a "glimpse" or snap shot of the columns in the tibble.  
@@ -92,7 +92,7 @@ Let’s go ahead and save `mod01`. There are multiple approaches for saving obje
 The code chunk below pipes the `mod01` object into `readr::write_rds()`. It saves the object to a file in the local working directory for simplicity. Notice that the `.rds` extension is included after the desired file name.  
 
 ```{r, fit_save_01}
-mod01 %>% readr::write_rds('my_simple_example_model.rds')
+mod01 %>% readr::write_rds('../models/my_simple_example_model.rds')
 ```
 
 If you ran the above code chunk, check your working directory with the Files tab. You should see the `my_simple_example_model.rds` in your current working directory.  
@@ -102,7 +102,7 @@ If you ran the above code chunk, check your working directory with the Files tab
 Let’s now load in that model, but assign it to a different variable name. We can read in an `.rds` file with the `readr::read_rds()` function. The object is loaded in and assigned to the `re_load_mod01` object in the code chunk below.  
 
 ```{r, reload_01}
-re_load_mod01 <- readr::read_rds('my_simple_example_model.rds')
+re_load_mod01 <- readr::read_rds('../models/my_simple_example_model.rds')
 ```
 
 We can now with the `re_load_mod01` object just like the original model we fit, `mod01`. So we can use `summary()` and any other function on the model object, like `predict()`, or `coef()`, or `broom::tidy()`. To confirm let’s print out the summary below. If you compare the summary results to that printed previously you will see that the two are identical.  

@@ -1,0 +1,12 @@
+### DEFEAULT ###
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+### SEAN'S ###
+sean/data/*
+sean/doc/*
+sean/models/*
+sean/plots/*
+sean/sean.Rproj
