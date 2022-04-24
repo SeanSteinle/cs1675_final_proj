@@ -2,59 +2,10 @@
 #CS1675 Final Project
 #Exploratory Data Analysis
 
-#First, let's review our task in this notebooks per the guidelines document:
-
-# Part i: Exploration
-# •
-# Visualize the distributions of variables in the data set. x
-# •
-# Counts for categorical variables. X
-# •
-# Distributions for continuous variables. Are the distributions Gaussian like? (For X too?)
-#   •
-# Consider conditioning (grouping or “breaking up”) the continuous variables based (For X too?)
-# on the categorical variables.
-# •
-# Are there differences in continuous variable distributions and continuous variable summary 
-# statistics based on region or customer?
-#   •
-# Are there differences in continuous variable distributions and continuous variable summary
-# statistics based on the binary outcome?
-#   •
-# Visualize the relationships between the continuous inputs, are they correlated?
-#   •
-# Visualize the relationships between the continuous outputs ( response and the
-#                                                              log transformed response ) with respect to the continuous inputs.
-# •
-# Can you identify any clear trends? Do the trends depend on the categorical inputs?
-#   •
-# How can you visualize the behavior of the binary outcome with respect to the
-# continuous inputs?
-
-
-#FACTORS AND BOTH RESPONSES:
-#DONE:
-#BASIC SUMMARIES OF FACTORS.
-#SUMMARIZED RESPONSE1 WITH RUN CHARTS AND HISTOGRAMS. IT IS GAUSSIAN.
-#SUMMARIZED RESPONSE2 WITH RUN CHARTS AND HISTOGRAMS. REGION SEEMS TO BE PLAYING A ROLE.
-#NEED TO DO:
-#SUMMARIZE NUMERICALLY AS WELL
-
-#PREDICTORS:
-#DONE:
-#SUMMARIZED EACH GROUP VS. R1 ALONE, BY REGION, BY CUSTOMER
-#NEED TO DO:
-#SUMMARIZE DISTRIBUTIONS INDEPENDENTLY
-#SUMMARIZE WITH RESPECT TO R2 ALONE, BY REGION, BY CUSTOMER
-
-#OVERALL:
-#NEED TO DO:
-#CHECK FILE OUTPUT NAMES
-
-
-#MORE HISTOGRAMS (FOR CONTINOUS INPUTS!) are they gaussian?
-  #HISTS BY CUSTOMER/REGION
-#CORRELATION
+#IMPORTS AND PATH
+library(tidyverse)
+library(corrplot)
+setwd("C:/Users/seans/Desktop/School/School/Sem8/CS1675/cs1675_final_proj/sean")
 
 #LOADING DATA
 df <- readr::read_csv("data/final_project_train.csv", col_names = TRUE)
@@ -62,11 +13,11 @@ colnames(df)
 
 # ABOUT THE DATA
 # ROWS: Each row in our data is an attempted sale (project) for PPG. Each sale has a unique rowid number associated with it.
-#
+
+#FACTOR EXPLORATION:
+
 # FACTORS: For every sale, we have data on the region that we're selling to and the customer that we're selling to 
 # (lots of repeat customers). These are our categorical variables.
-
-#HISTOGRAMS (FACTORS)
 df %>% #REGION
   ggplot()  +
   geom_histogram(aes(x = region, y = stat(count/sum(count))), stat = 'count') +
@@ -74,7 +25,6 @@ df %>% #REGION
   xlab("Region") + ylab("Proportion of Total Sales Projects") +
   theme_minimal()
 ggsave("plots/EDA/region_dist.png")
-  
 
 #There are three regions, which have somewhat of an equal balance between them.
 
@@ -88,33 +38,50 @@ ggsave("plots/EDA/customers_dist.png")
 
 #We have eight main customers plus an "other" category. The main customers make up over half of the data, with our main customers being targets for 40-100 projects each.
 
+df %>% #
+  ggplot()  +
+  geom_histogram(aes(x = customer, y = stat(count/sum(count))), stat = 'count') +
+  ggtitle("Distribution of Customer in Sales Projects by Region") +
+  xlab("Customer") + ylab("Proportion of Total Projects") +
+  theme_minimal() +
+  facet_wrap(~region)
+ggsave("plots/EDA/region_customers_codist.png")
+
+#Glad we examined this interaction! There is definitely a difference in customer by region. For example, customers B, D, and E exist in regions XX and YY, but do not exist
+#at all in region ZZ. Conversely, customers K and M don't exist in the former two regions, rather only in the ZZ region.
+
+
+#RESPONSE EXPLORATION
+
+#THE CONTINUOUS RESPONSE
+
 # RESPONSES: For every sale, we also have data on how many hours per week our sales rep invested in selling the product and whether or not the product hit its sales goal. These
 # are the response variables (for regression and classification respectively).
 
-#RESPONSE 1 RUN CHARTS:
+#CONTINUOUS RESPONSE RUN CHARTS:
 df %>% #RESPONSE (CONTINUOUS, TASK 1) #Woah, look at that outlier!
   ggplot(aes(x = rowid, y = response)) + 
   geom_point() +
   ggtitle("Average Hours Worked Per Week By Project Index") +
   xlab("Project Index") + ylab("Average Hours Worked Per Week") +
   theme_minimal()
-ggsave("plots/EDA/response_run_chart.png")
+ggsave("plots/EDA/contresponse_run_chart.png")
 
-df %>% #RESPONSE BY REGION
+df %>% #CONTINUOUS RESPONSE BY REGION
   ggplot(aes(x = rowid, y = response, col = region)) + 
   geom_point() +
   ggtitle("Average Hours Worked Per Week By Project Index") +
   xlab("Project Index") + ylab("Average Hours Worked Per Week") +
   theme_minimal()
-ggsave("plots/EDA/response_run_chart_byregion.png")
+ggsave("plots/EDA/contresponse_run_chart_byregion.png")
 
-df %>% #RESPONSE BY CUSTOMER
+df %>% #CONTINUOUS RESPONSE BY CUSTOMER
   ggplot(aes(x = rowid, y = response, col = customer)) + 
   geom_point() +
   ggtitle("Average Hours Worked Per Week By Project Index") +
   xlab("Project Index") + ylab("Average Hours Worked Per Week") +
   theme_minimal()
-ggsave("plots/EDA/response_run_chart_bycustomer.png")
+ggsave("plots/EDA/contresponse_run_chart_bycustomer.png")
 
 df %>% #RESPONSE IN LOG SPACE
   ggplot(aes(x = rowid, y = log(response))) + 
@@ -122,19 +89,19 @@ df %>% #RESPONSE IN LOG SPACE
   ggtitle("Log Average Hours Worked Per Week By Project Index") +
   xlab("Project Index") + ylab("Log Average Hours Worked Per Week") +
   theme_minimal()
-ggsave("plots/EDA/log_response_run_chart.png")
+ggsave("plots/EDA/log_contresponse_run_chart.png")
 
 #Most values stay positive in the log space, but still need to respect bounds! We'll consider distributions in log-space because we want to observe normality in our actual
 #output space!
 
-#RESPONSE 1 HISTOGRAMS
+#CONTINOUS RESPONSE HISTOGRAMS
 df %>% #RESPONSE
   ggplot() + 
   geom_histogram(aes(x = response, y = stat(count)), stat = 'bin', bins = 30) +
   ggtitle("Average Hours Worked Per Week Distribution") +
   xlab("Average Hours Worked Per Week") + ylab("Count") +
   theme_minimal()
-ggsave("plots/EDA/response_dist.png")
+ggsave("plots/EDA/contresponse_dist.png")
 
 df %>% #RESPONSE IN LOG SPACE
   ggplot() + 
@@ -142,7 +109,7 @@ df %>% #RESPONSE IN LOG SPACE
   ggtitle("Log Average Hours Worked Per Week Distribution") +
   xlab("Log Average Hours Worked Per Week") + ylab("Count") +
   theme_minimal()
-ggsave("plots/EDA/log_response_dist.png")
+ggsave("plots/EDA/log_contresponse_dist.png")
 
 df %>% #RESPONSE IN LOG SPACE BY REGION
   ggplot() + 
@@ -151,7 +118,7 @@ df %>% #RESPONSE IN LOG SPACE BY REGION
   xlab("Log Average Hours Worked Per Week") + ylab("Count") +
   facet_wrap(~region) +
   theme_minimal()
-ggsave("plots/EDA/log_response_byregion_dist.png")
+ggsave("plots/EDA/log_contresponse_byregion_dist.png")
 
 df %>% #RESPONSE IN LOG SPACE BY CUSTOMER
   ggplot() + 
@@ -160,27 +127,29 @@ df %>% #RESPONSE IN LOG SPACE BY CUSTOMER
   xlab("Log Average Hours Worked Per Week") + ylab("Count") +
   facet_wrap(~customer) +
   theme_minimal()
-ggsave("plots/EDA/log_response_bycustomer_dist.png")
+ggsave("plots/EDA/log_contresponse_bycustomer_dist.png")
 
 #Looks like our response is very normal! Tricky to tell for customers because less data, but looks largely normal. Nothing concerning.
 
-#RESPONSE 2 RUN CHART
+#THE BINARY RESPONSE
+
+#BINARY RESPONSE RUN CHART
 df %>% #OUTCOME 
   ggplot() + 
   geom_point(aes(x = rowid, y = outcome)) +
   ggtitle("Run Chart of Sales Targets Hit or Missed") +
   xlab("Project Index") + ylab("Project Outcome") +
   theme_minimal()
-ggsave("plots/EDA/outcome_run_chart.png")
+ggsave("plots/EDA/binresponse_run_chart.png")
 
-#RESPONSE 2 HISTOGRAMS
-df %>% #OUTCOME (BINARY, TASK 2)
+#BINARY RESPONSE HISTOGRAMS
+df %>% #OUTCOME
   ggplot() + 
   geom_histogram(aes(x = outcome, y = stat(count/sum(count))), stat = "count") +
   ggtitle("Distribution of Sales Targets Hit vs. Missed") +
   xlab("Group") + ylab("Proportion of Total Sales Projects") +
   theme_minimal()
-ggsave("plots/EDA/outcome_dist.png")
+ggsave("plots/EDA/binresponse_dist.png")
 
 df %>% #OUTCOME BY REGION
   ggplot() + 
@@ -189,18 +158,32 @@ df %>% #OUTCOME BY REGION
   xlab("Group") + ylab("Proportion of Total Sales Projects") +
   facet_wrap(~region) +
   theme_minimal()
-ggsave("plots/EDA/outcome_dist_byregion.png")
+ggsave("plots/EDA/binresponse_dist_byregion.png")
 
-df %>% #OUTCOME BY REGION
+df %>% #OUTCOME BY CUSTOMER
   ggplot() + 
   geom_histogram(aes(x = outcome, y = stat(count/sum(count))), stat = "count") +
   ggtitle("Distribution of Sales Targets Hit vs. Missed By Customer") +
   xlab("Group") + ylab("Proportion of Total Sales Projects") +
   facet_wrap(~customer) +
   theme_minimal()
-ggsave("plots/EDA/outcome_dist_bycustomer.png")
+ggsave("plots/EDA/binresponse_dist_bycustomer.png")
 
 #Interestingly, it looks like region may be a useful feature for classification. ZZ has a much lower success rate than XX.
+
+df %>% #COMPARE CONTINOUS RESPONSE DISTRIBUTION BASED ON BINARY RESPONSE
+  ggplot() + 
+  geom_histogram(aes(x = log(response), y = stat(count)), stat = 'bin', bins = 15) +
+  ggtitle("Log Average Hours Worked Per Week Distributions By Sales Target Met") +
+  xlab("Log Average Hours Worked Per Week") + ylab("Count") +
+  facet_wrap(~outcome) +
+  theme_minimal()
+ggsave("plots/EDA/contresponse_binresponse_cdist.png")
+
+#These distributions look pretty similar. The distribution for sales targets hit might be a little skewed, maybe we hit our targets more on small projects with few hours worked?
+
+
+#PREDICTOR EXPLORATION
 
 # PREDICTORS: Finally, the majority of our columns are predictors. For each sale, we have five sets of lexically derived features 
 # (AFINN: xa, Bing: xb, NRC: xn, sentimentr: xs, count-based: xw). xa, xb, and xn have 8 features each, xs has 6 features, and xw has 3 features.
@@ -262,57 +245,180 @@ df_xw <- data.frame(y = df$response, #this extends our DF longer by reducing man
                               rep("w3", nrow(df))))
 
 #AFINN
-df_xa %>%
-  ggplot(aes(x, y, col = group)) +
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE
+  select(starts_with("xa")) %>%
+  gather() %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~key) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XA Features") +
+  theme_minimal()
+ggsave("plots/EDA/afeats_distr.png")
+
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE CONDITIONED ON BINARY RESPONSE
+  select(starts_with("xa"), outcome) %>%
+  pivot_longer(cols = contains("xa"), names_to = 'feature', values_to = 'value') %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 9) +
+  facet_wrap(~feature + outcome) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XA Features by Sales Goal Reached") +
+  theme_minimal()
+ggsave("plots/EDA/afeats_binresponse_codistr.png")
+
+#This allows us to tease out tends of the features on the binary response. We see that for feature XA_03, smaller values indicate event. It's hard
+#to interpret the graph because there isn't much data though.
+
+df_xa %>% #EXAMINE EACH FEATURE PLOTTED AGAINST THE LOG CONTINOUS RESPONSE
+  ggplot(aes(x, log(y), col = group)) +
   geom_point(alpha = 0.5) +
-  ggtitle("AFINN Sentiment Features vs. Hours Worked") +
+  ggtitle("AFINN Sentiment Features vs. Log Hours Worked") +
   xlab("X") + ylab("Y") + 
   theme_minimal()
-ggsave("plots/EDA/afeats_response.png")
+ggsave("plots/EDA/afeats_contresponse_codistr.png")
 
 #LOT of overlap here. Still can tell general trends of a8 tends towards 0, a2 tends towards large values.
 
 #Bing Features
-df_xb %>%
-  ggplot(aes(x, y, col = group)) +
-  geom_point(alpha = 0.5) +
-  ggtitle("Bing Sentiment Features vs. Hours Worked") +
-  xlab("X") + ylab("Y") +
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE
+  select(starts_with("xb")) %>%
+  gather() %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~key) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XB Features") +
   theme_minimal()
-ggsave("plots/EDA/bfeats_response.png")
+ggsave("plots/EDA/bfeats_distr.png")
+
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE CONDITIONED ON BINARY RESPONSE
+  select(starts_with("xb"), outcome) %>%
+  pivot_longer(cols = contains("xb"), names_to = 'feature', values_to = 'value') %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 9) +
+  facet_wrap(~feature + outcome) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XB Features by Sales Goal Reached") +
+  theme_minimal()
+ggsave("plots/EDA/bfeats_binresponse_codistr.png")
+
+df_xb %>% #EXAMINE EACH FEATURE PLOTTED AGAINST THE LOG CONTINOUS RESPONSE
+  ggplot(aes(x, log(y), col = group)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Bing Sentiment Features vs. Log Hours Worked") +
+  xlab("X") + ylab("Y") + 
+  theme_minimal()
+ggsave("plots/EDA/bfeats_contresponse_codistr.png")
 
 #Looks like these are somewhat discretized?
 
+
 #NRC Features
-df_xn %>%
-  ggplot(aes(x, y, col = group)) +
-  geom_point(alpha = 0.5) +
-  ggtitle("NRC Sentiment Features vs. Hours Worked") +
-  xlab("X") + ylab("Y") +
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE
+  select(starts_with("xn")) %>%
+  gather() %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~key) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XN Features") +
   theme_minimal()
-ggsave("plots/EDA/nfeats_response.png")
+ggsave("plots/EDA/nfeats_distr.png")
+
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE CONDITIONED ON BINARY RESPONSE
+  select(starts_with("xn"), outcome) %>%
+  pivot_longer(cols = contains("xn"), names_to = 'feature', values_to = 'value') %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 9) +
+  facet_wrap(~feature + outcome) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XN Features by Sales Goal Reached") +
+  theme_minimal()
+ggsave("plots/EDA/nfeats_binresponse_codistr.png")
+
+df_xn %>% #EXAMINE EACH FEATURE PLOTTED AGAINST THE LOG CONTINOUS RESPONSE
+  ggplot(aes(x, log(y), col = group)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("NRC Sentiment Features vs. Log Hours Worked") +
+  xlab("X") + ylab("Y") + 
+  theme_minimal()
+ggsave("plots/EDA/nfeats_contresponse_codistr.png")
 
 #Also somewhat discretized, very active inside x = (-1,3)
 
+
 #sentimentr Features
-
-df_xs %>%
-  ggplot(aes(x, y, col = group)) +
-  geom_point(alpha = 0.5) +
-  ggtitle("sentimentr Sentiment Features vs. Hours Worked") +
-  xlab("X") + ylab("Y") +
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE
+  select(starts_with("xs")) %>%
+  gather() %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~key) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XS Features") +
   theme_minimal()
-ggsave("plots/EDA/sfeats_response.png")
+ggsave("plots/EDA/sfeats_distr.png")
 
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE CONDITIONED ON BINARY RESPONSE
+  select(starts_with("xs"), outcome) %>%
+  pivot_longer(cols = contains("xs"), names_to = 'feature', values_to = 'value') %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 9) +
+  facet_wrap(~feature + outcome) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XS Features by Sales Goal Reached") +
+  theme_minimal()
+ggsave("plots/EDA/sfeats_binresponse_codistr.png")
+
+df_xs %>% #EXAMINE EACH FEATURE PLOTTED AGAINST THE LOG CONTINOUS RESPONSE
+  ggplot(aes(x, log(y), col = group)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("sentimentr Sentiment Features vs. Log Hours Worked") +
+  xlab("X") + ylab("Y") + 
+  theme_minimal()
+ggsave("plots/EDA/sfeats_contresponse_codistr.png")
 #Not discrete at all, though all features except s2/s3 non-negative!
 
 #Count-Based Features
-df_xw %>%
-  ggplot(aes(x, y, col = group)) +
-  geom_point(alpha = 0.5) +
-  ggtitle("Word Count-Based Sentiment Features vs. Hours Worked") +
-  xlab("X") + ylab("Y") +
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE
+  select(starts_with("xw")) %>%
+  gather() %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~key) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XW Features") +
   theme_minimal()
-ggsave("plots/EDA/wfeats_response.png")
+ggsave("plots/EDA/wfeats_distr.png")
+
+df %>% #EXAMINE DISTRIBUTION OF EACH FEATURE CONDITIONED ON BINARY RESPONSE
+  select(starts_with("xw"), outcome) %>%
+  pivot_longer(cols = contains("xw"), names_to = 'feature', values_to = 'value') %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 9) +
+  facet_wrap(~feature + outcome) +
+  xlab("Count") + ylab("Value of Feature") +
+  ggtitle("Distribution of XW Features by Sales Goal Reached") +
+  theme_minimal()
+ggsave("plots/EDA/wfeats_binresponse_codistr.png")
+
+df_xn %>% #EXAMINE EACH FEATURE PLOTTED AGAINST THE LOG CONTINOUS RESPONSE
+  ggplot(aes(x, log(y), col = group)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Word-Based Sentiment Features vs. Log Hours Worked") +
+  xlab("X") + ylab("Y") + 
+  theme_minimal()
+ggsave("plots/EDA/wfeats_contresponse_codistr.png")
 
 #Wow, very different from our other X sets. w2 small, w1 middle, w3 big. Larger scale than our other 4 sets.
+
+cors <- df %>%
+  select(-rowid) %>%
+  select_if(is.numeric) %>%
+  cor()
+
+jpeg(file = "plots/EDA/feats_contresponse_cors.jpeg")
+corsplot <- corrplot(cors, method = 'circle', type = 'upper', diag = FALSE, title = "Correlation of Features and Hours Worked")
+dev.off()
+#response not very correlated with inputs
