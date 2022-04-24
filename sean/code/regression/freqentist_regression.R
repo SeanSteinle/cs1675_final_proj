@@ -1,6 +1,6 @@
 #Sean Steinle
 #CS1675 Final Project
-#Regression
+#Regression: Simple Frequentist Models
 
 #IMPORTS AND PATH
 library(tidyverse)
@@ -82,6 +82,10 @@ m9_rsq <- summary(M9)$r.squared
 m4_rsq <- summary(M4)$r.squared
 m9_sigma <- summary(M9)$sigma
 m4_sigma <- summary(M4)$sigma
+
+#save models
+M9 %>% readr::write_rds('models/nbM9.rds')
+M4 %>% readr::write_rds('models/nbM4.rds')
 
 #WRITE-UP:
 
