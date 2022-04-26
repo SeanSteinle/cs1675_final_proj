@@ -1,3 +1,5 @@
+
+```{r }
 #Sean Steinle
 #CS1675 Final Project
 #Regression B: Bayesian Models
@@ -13,6 +15,10 @@ df <- readr::read_csv("data/final_project_train.csv", col_names = TRUE)
 colnames(df)
 
 #TRAIN BAYESIAN MODELS
+
+#trim df
+df_train <- df %>%
+  select(-rowid, -outcome)
 
 #first, specify models identified from simple linear regression (in retrospect, my formulas could have been more concise in my last script)
 F9 <- as.formula(log(response) ~ (region + customer):(. - (region + customer)))
@@ -61,3 +67,13 @@ bM4 %>% readr::write_rds('models/bM4.rds')
 # be used to construct a Bayesian uncertainty interval (compare to a Frequentist confidence interval). We find that for both models, the interval is quite small 
 # (less than 0.04 in size for each). Furthermore, we find that our point estimates of sigma from the non-Bayesian lm() training we performed in the previous script
 # are both near the middle of our uncertainty intervals.
+```
+
+
+
+---
+title: bayesian_regression.R
+author: seans
+date: '2022-04-26'
+
+---

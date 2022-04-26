@@ -5,6 +5,8 @@
 #IMPORTS AND PATH
 library(tidyverse)
 library(caret)
+library(coefplot)
+library(knitr)
 setwd("C:/Users/seans/Desktop/School/School/Sem8/CS1675/cs1675_final_proj/sean")
 
 #LOADING DATA
@@ -14,22 +16,6 @@ colnames(df)
 df %>% glimpse()
 
 #REGRESSION WITH SIMPLE PROBLEMS
-#This function fits num_pcs number of models and makes predictions for each PC.
-fit_and_predict <- function(num_pcs, feat_names, df)
-{ 
-  models = list()
-  preds = list()
-  for(pc_num in 1:num_pcs)
-  {
-    fmla <- as.formula(paste("PC", pc_num, " ~ ", paste(feat_names, collapse= "+"), sep = ""))
-    model <- lm(fmla, data = df)
-    X <- df %>%
-      select(contains("avg"))
-    preds[[pc_num]] <- predict(model, X)
-    models[[pc_num]] <- model
-  }
-  list("models" = models, "predictions" = preds)
-}
 
 #create feats and train models!
 contonly <- df %>%
@@ -63,13 +49,13 @@ summary(M9)$adj.r.squared #80%! not bad!
 
 #top 3 model coef summaries
 jpeg(file = "plots/regression/m9_coefs.jpeg")
-dotplot(coef(M9))
+coefplot::coefplot(M9)
 dev.off()
 jpeg(file = "plots/regression/m4_coefs.jpeg")
-dotplot(coef(M4))
+coefplot::coefplot(M4)
 dev.off()
 jpeg(file = "plots/regression/m8_coefs.jpeg")
-dotplot(coef(M8))
+coefplot::coefplot(M8)
 dev.off()
 
 #see largest coefs
@@ -99,4 +85,3 @@ M4 %>% readr::write_rds('models/nbM4.rds')
 #M8's most influential features tended to be the inputs themselves (1st degree polys). M4's most influential features included region interactions with sentiment features, along with some
 #non-interactive terms as well.
 
-#MOST IMPOTANT FEATURES? 

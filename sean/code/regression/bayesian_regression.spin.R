@@ -14,6 +14,10 @@ colnames(df)
 
 #TRAIN BAYESIAN MODELS
 
+#trim df
+df_train <- df %>%
+  select(-rowid, -outcome)
+
 #first, specify models identified from simple linear regression (in retrospect, my formulas could have been more concise in my last script)
 F9 <- as.formula(log(response) ~ (region + customer):(. - (region + customer)))
 F4 <- as.formula(log(response) ~ (region)*(. - (region + customer)))
