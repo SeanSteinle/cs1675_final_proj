@@ -1,6 +1,6 @@
 #Sean Steinle
 #CS1675 Final Project
-#Regression: Simple Frequentist Models
+#Regression A: Simple Frequentist Models
 
 #IMPORTS AND PATH
 library(tidyverse)
@@ -40,7 +40,7 @@ F7 <- as.formula(paste('log(response) ~ ',paste('poly(', contonly,',2)',collapse
 F8 <- as.formula(paste('log(response) ~ region + customer +',paste('poly(', contonly,',2)',collapse = ' + ')))
 F9 <- as.formula(paste('log(response) ~ (region + customer):(',paste('poly(', contonly,',2)',collapse = ' + '), ")"))
 
-M1 <- lm(response ~ region + customer, data = df)
+M1 <- lm(log(response) ~ region + customer, data = df)
 M2 <- lm(as.formula(paste("log(response) ~ ", paste(contonly, collapse = "+"), sep = "")), data = df) #a little convoluted, but fits easier than typing everything or doing -
 M3 <- lm(as.formula(paste("log(response) ~ region + customer +", paste(contonly, collapse = "+"), sep = "")), data = df)
 M4 <- lm(as.formula(paste("log(response) ~ region*(", paste(contonly, collapse = "+"), ")", sep = "")), data = df)

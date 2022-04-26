@@ -1,6 +1,6 @@
 #Sean Steinle
 #CS1675 Final Project
-#Regression: Bayesian Models
+#Regression B: Bayesian Models
 
 #IMPORTS AND PATH
 library(tidyverse)
@@ -38,7 +38,6 @@ posterior_interval(bM4, prob = 0.95, pars = c("R2","sigma"))
 
 #non-probabilistic
 dotplot(bM9$coefficients)
-
 
 #probabilistic
 bM9_means <- bM9$stan_summary[,1]
