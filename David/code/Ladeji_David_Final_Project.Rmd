@@ -46,11 +46,6 @@ df_all %>% ggplot(mapping = aes(x = customer)) +
 ```{r, solution_1b_a}
 df_all <- df_all %>% mutate(log_response = log(response))
 
-df_xb <- df_all %>% select(starts_with("xb"), outcome, response, log_response)
-df_xn <- df_all %>% select(starts_with("xn"), outcome, response, log_response)
-df_xa <- df_all %>% select(starts_with("xa"), outcome, response, log_response)
-df_xw <- df_all %>% select(starts_with("xw"), outcome, response, log_response)
-df_xs <- df_all %>% select(starts_with("xs"), outcome, response, log_response)
 ```
 
 ```{r, solution_1b_b_1}
@@ -294,21 +289,44 @@ df_all %>%
 
 ```{r, solution_1e_2}
 df_all %>% 
-  select(response, log_response, starts_with("xa")) %>%
+  select(response, log_response, region, starts_with("xa")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 
 df_all %>% 
-  select(response, log_response, starts_with("xa")) %>%
+  select(response, log_response, region, starts_with("xa")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xa")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xa")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 ```
 
@@ -316,21 +334,44 @@ df_all %>%
 
 ```{r, solution_1e_3}
 df_all %>% 
-  select(response, log_response, starts_with("xn")) %>%
+  select(response, log_response, region, starts_with("xn")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 
 df_all %>% 
-  select(response, log_response, starts_with("xn")) %>%
+  select(response, log_response, region, starts_with("xn")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xn")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xn")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 ```
 
@@ -338,21 +379,44 @@ df_all %>%
 
 ```{r, solution_1e_4}
 df_all %>% 
-  select(response, log_response, starts_with("xs")) %>%
+  select(response, log_response, region, starts_with("xs")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 
 df_all %>% 
-  select(response, log_response, starts_with("xs")) %>%
+  select(response, log_response, region, starts_with("xs")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xs")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xs")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 ```
 
@@ -360,21 +424,44 @@ df_all %>%
 
 ```{r, solution_1e_5}
 df_all %>% 
-  select(response, log_response, starts_with("xw")) %>%
+  select(response, log_response, region, starts_with("xw")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 
 df_all %>% 
-  select(response, log_response, starts_with("xw")) %>%
+  select(response, log_response, region, starts_with("xw")) %>%
   tidyr::gather(key = "key",
                 value = "value",
-                c(-response, -log_response)) %>%
-  ggplot(mapping = aes(x = value)) +
+                c(-response, -log_response, -region)) %>%
+  ggplot(mapping = aes(x = value, color = region)) +
   geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xw")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
+  facet_wrap(~key, scales = "free") 
+
+df_all %>% 
+  select(response, log_response, customer, starts_with("xw")) %>%
+  tidyr::gather(key = "key",
+                value = "value",
+                c(-response, -log_response, -customer)) %>%
+  ggplot(mapping = aes(x = value, color = customer)) +
+  geom_point(mapping = aes(y = log_response)) +
+  scale_color_manual(values = alpha(c("black", "blue", "yellow", "red", "green", "purple", "orange", "grey", "maroon"), .7)) +
   facet_wrap(~key, scales = "free") 
 ```
 
@@ -408,6 +495,7 @@ df_all %>%
                 c(-num_outcome)) %>%
   ggplot(mapping = aes(x = value)) +
   geom_point(mapping = aes(y = num_outcome)) +
+  geom_density(mapping = aes(color = "red")) +
   facet_wrap(~key, scales = "free")
 ```
 
@@ -420,6 +508,7 @@ df_all %>%
                 c(-num_outcome)) %>%
   ggplot(mapping = aes(x = value)) +
   geom_point(mapping = aes(y = num_outcome)) +
+  geom_density(mapping = aes(color = "red")) +
   facet_wrap(~key, scales = "free")
 ```
 
@@ -431,6 +520,7 @@ df_all %>%
                 value = "value",
                 c(-num_outcome)) %>%
   ggplot(mapping = aes(x = value)) +
+  geom_density(mapping = aes(color = "red")) +
   geom_point(mapping = aes(y = num_outcome)) +
   facet_wrap(~key, scales = "free")
 ```
@@ -444,6 +534,7 @@ df_all %>%
                 c(-num_outcome)) %>%
   ggplot(mapping = aes(x = value)) +
   geom_point(mapping = aes(y = num_outcome)) +
+  geom_density(mapping = aes(color = "red")) +
   facet_wrap(~key, scales = "free")
 ```
 
@@ -538,31 +629,26 @@ coefplot(model_region_cont_interact)
 
 ### 2a.iv) How do the coefficient summaries compare between the top 3? Which inputs seem important?
 
-```{r, solution_2aiv}
 
-```
+Model 6 seems to have the most features, then model 5 has the second largest and model 4 the least nuber of features. The number of important features also follows this trend (with Model 6 as the highest and model 4 the lowest).
 
+I can't really make out individual features withof model 5 and 6 as they have too many features, but for model 4, the majority of important features are connected to the region of ZZ.
 
 
 
 ### 2b.i) Fit 2 Bayesian linear models. One should be the best model and state the reason for choosing the second model.
 ```{r, solution_2bi} 
-## Create Design matrix and info for model 6 and model 5
+# Fit Bayesian model with stan_lm()
 b_model06 <- stan_lm(log_response ~ (xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03)^2, df_all, prior = R2(location = 0.924388))
 
 b_model05 <- stan_lm(log_response ~ (xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03) * (customer), df_all, prior = R2(location = 0.8211212))
 
 ```
 
-## Define Functions & Fit the bayesian models
-
-```{r, solution_2bii}
-b_model06$stan_function
-
-```
+## For my second bayesian model selection, I chose model 5 because it was the second best model according to the performance metric I used (Rsquared)
 
 
-### 2biii). Fit the Bayesian models
+### Displaying the bayesian models' posterior interval
 
 ```{r, solution_2biii}
 
@@ -573,22 +659,22 @@ posterior_interval(b_model05, prob = 0.95, pars = c("R2","sigma"))
 
 
 
-### 2biv). Identify the best model. Which performance metric did you use?
+### 2bii). Identify the best model. Which performance metric did you use?
 
 The best model is model 6. I used Bayes Factor to make my selection.
 
 
-### 2bv). Visualize the regression coef summary statistics for the best model.
+### 2biii). Visualize the regression coef summary statistics for the best model.
 
-```{r, solution_2bv}
+```{r, solution_2biii}
 # Define the visualizing function
 dotplot(b_model06$coefficients)
 
 ```
 
-### 2bvi). Study the posterior uncertainty in the noise (residual error), How does the lm() maximum likelihood estimate (MLE) on $\sigma$ relate to the posterior uncertainty on $\sigma$?
+### 2biv). Study the posterior uncertainty in the noise (residual error), How does the lm() maximum likelihood estimate (MLE) on $\sigma$ relate to the posterior uncertainty on $\sigma$?
 
-```{r, solution_2bvi}
+```{r, solution_2biv}
 b_mod6_mean <- b_model06$stan_summary[,1]
 b_mod6_sd <- b_model06$stan_summary[,2]  
 b_mod6_upper <- b_mod6_mean + (2*b_mod6_sd)
@@ -801,6 +887,18 @@ xgb_mod <- train(log_response ~ .,
 ## 2dvi). Train and tune 2 methods of your choice
 ```{r, solution_2dvi}
 set.seed(4321)
+svm_mod <- train(log_response ~ ., data = df_all,
+                 method = "svmRadial",
+                 metric = my_metric,
+                 preProc = c("center", "scale"),
+                 trControl = my_ctrl)
+
+pls_mod <- train(log_response ~ ., data = df_all,
+                 method = "pls",
+                 metric = my_metric,
+                 preProc = c("center", "scale"),
+                 trControl = my_ctrl)
+
 ```
 
 
@@ -815,12 +913,137 @@ results <- resamples(list(LM1 = Tmodel1,
                          GLMNET2 = elastic_net_2,
                          NNET = nnet_mod,
                          RF = rf_mod,
-                         XGB = xgb_mod
-                         #SVM = fit_svm,
-                         ))
+                         XGB = xgb_mod,
+                         SVM = svm_mod,
+                         PLS = pls_mod))
 
 dotplot(results, metric = my_metric)
 ```
+
+```{r, solution_2eii}
+# Excluding Linear model 2 - 4
+results <- resamples(list(LM1 = Tmodel1,
+                         GLMNET1 = elastic_net_1,
+                         GLMNET2 = elastic_net_2,
+                         NNET = nnet_mod,
+                         RF = rf_mod,
+                         XGB = xgb_mod,
+                         SVM = svm_mod,
+                         PLS = pls_mod))
+
+dotplot(results, metric = my_metric)
+```
+
+
+The best model is the random forest model.
+
+
+
+### ############################################################################
+
+### 3a) Use glm() to fit classification models
+```{r, solution_3a}
+# Add numeric binary value to df_all
+df_all <- df_all %>% mutate(num_outcome = ifelse(outcome == "event", 1, 0))
+```
+
+```{r, solution_3ai}
+# Fit linear models for categorical inputs
+cat_model_1 <- glm(num_outcome ~ region + customer, data = df_all)
+
+# Fit linear models for continuous inputs
+cat_model_2 <- glm(num_outcome ~ xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03, data = df_all)
+
+
+#Fit linear models for catgorical inputs
+cat_model_3 <- glm(num_outcome ~ xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03 + region + customer, data = df_all)
+
+#Fit linear models for interaction between region and continuous inputs 
+cat_model_4 <- glm(num_outcome ~ (xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03) * (region), data = df_all)
+
+
+#Fit linear models for interaction between customer and continuous inputs 
+cat_model_5 <- glm(num_outcome ~ (xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03) * (customer), data = df_all)
+
+
+# Fit Linear model with all pairwise interactions in continuous inputs
+cat_model_6 <- glm(num_outcome ~ (xb_01 + xb_02 + xb_03 + xb_04 + xb_05 + xb_06 + xb_07 + xb_08 + xa_01 + xa_02 + xa_03 + xa_04 + xa_05 + xa_06 + xa_07 + xa_08 + xn_01 + xn_02 + xn_03 + xn_04 + xn_05 + xn_06 + xn_07 + xn_08 + xs_01 + xs_02 + xs_03 + xs_04 + xs_05 + xs_06 + xw_01 + xw_02 + xw_03)^2 , data = df_all)
+
+
+# Fit 3 Linear models with basis function of your choice
+cat_model_7 <- glm(num_outcome ~ (I(poly(xb_01, 2, raw = TRUE)) + I(poly(xb_02, 2, raw = TRUE)) + I(poly(xb_03, 2, raw = TRUE)) + I(poly(xb_04, 2, raw = TRUE)) + I(poly(xb_05, 2, raw = TRUE)) + I(poly(xb_06, 2, raw = TRUE)) + I(poly(xb_07, 2, raw = TRUE)) + I(poly(xb_08, 2, raw = TRUE)) + I(poly(xa_01, 2, raw = TRUE)) + I(poly(xa_02, 2, raw = TRUE)) + I(poly(xa_03, 2, raw = TRUE)) + I(poly(xa_04, 2, raw = TRUE)) + I(poly(xa_05, 2, raw = TRUE)) + I(poly(xa_06, 2, raw = TRUE)) + I(poly(xa_07, 2, raw = TRUE)) + I(poly(xa_08, 2, raw = TRUE)) + I(poly(xn_01, 2, raw = TRUE)) + I(poly(xn_02, 2, raw = TRUE)) + I(poly(xn_03, 2, raw = TRUE)) + I(poly(xn_04, 2, raw = TRUE)) + I(poly(xn_05, 2, raw = TRUE)) + I(poly(xn_06, 2, raw = TRUE)) + I(poly(xn_07, 2, raw = TRUE)) + I(poly(xn_08, 2, raw = TRUE)) + I(poly(xs_01, 2, raw = TRUE)) + I(poly(xs_02, 2, raw = TRUE)) + I(poly(xs_03, 2, raw = TRUE)) + I(poly(xs_04, 2, raw = TRUE)) + I(poly(xs_05, 2, raw = TRUE)) + I(poly(xs_06, 2, raw = TRUE)) + I(poly(xw_01, 2, raw = TRUE)) + I(poly(xw_02, 2, raw = TRUE)) + I(poly(xw_03, 2, raw = TRUE))), data = df_all)
+
+cat_model_8 <- glm(num_outcome ~ (I(poly(xb_01, 4, raw = TRUE)) + I(poly(xb_02, 4, raw = TRUE)) + I(poly(xb_03, 4, raw = TRUE)) + I(poly(xb_04, 4, raw = TRUE)) + I(poly(xb_05, 4, raw = TRUE)) + I(poly(xb_06, 4, raw = TRUE)) + I(poly(xb_07, 4, raw = TRUE)) + I(poly(xb_08, 4, raw = TRUE)) + I(poly(xa_01, 4, raw = TRUE)) + I(poly(xa_02, 4, raw = TRUE)) + I(poly(xa_03, 4, raw = TRUE)) + I(poly(xa_04, 4, raw = TRUE)) + I(poly(xa_05, 4, raw = TRUE)) + I(poly(xa_06, 4, raw = TRUE)) + I(poly(xa_07, 4, raw = TRUE)) + I(poly(xa_08, 4, raw = TRUE)) + I(poly(xn_01, 4, raw = TRUE)) + I(poly(xn_02, 4, raw = TRUE)) + I(poly(xn_03, 4, raw = TRUE)) + I(poly(xn_04, 4, raw = TRUE)) + I(poly(xn_05, 4, raw = TRUE)) + I(poly(xn_06, 4, raw = TRUE)) + I(poly(xn_07, 4, raw = TRUE)) + I(poly(xn_08, 4, raw = TRUE)) + I(poly(xs_01, 4, raw = TRUE)) + I(poly(xs_02, 4, raw = TRUE)) + I(poly(xs_03, 4, raw = TRUE)) + I(poly(xs_04, 4, raw = TRUE)) + I(poly(xs_05, 4, raw = TRUE)) + I(poly(xs_06, 4, raw = TRUE)) + I(poly(xw_01, 4, raw = TRUE)) + I(poly(xw_02, 4, raw = TRUE)) + I(poly(xw_03, 4, raw = TRUE))), data = df_all)
+
+
+cat_model_9 <- glm(num_outcome ~ (splines::ns(xb_01, df = 7) + splines::ns(xb_02, df = 7) + splines::ns(xb_03, df = 7) + splines::ns(xb_04, df = 7) + splines::ns(xb_05, df = 7) + splines::ns(xb_06, df = 7) + splines::ns(xb_07, df = 7) + splines::ns(xb_08, df = 7) + splines::ns(xa_01, df = 7) + splines::ns(xa_02, df = 7) + splines::ns(xa_03, df = 7) + splines::ns(xa_04, df = 7) + splines::ns(xa_05, df = 7) + splines::ns(xa_06, df = 7) + splines::ns(xa_07, df = 7) + splines::ns(xa_08, df = 7) + splines::ns(xn_01, df = 7) + splines::ns(xn_02, df = 7) + splines::ns(xn_03, df = 7) + splines::ns(xn_04, df = 7) + splines::ns(xn_05, df = 7) + splines::ns(xn_06, df = 7) + splines::ns(xn_07, df = 7) + splines::ns(xn_08, df = 7) + splines::ns(xs_01, df = 7) + splines::ns(xs_02, df = 7) + splines::ns(xs_03, df = 7) + splines::ns(xs_04, df = 7) + splines::ns(xs_05, df = 7) + splines::ns(xs_06, df = 7) + splines::ns(xw_01, df = 7) + splines::ns(xw_02, df = 7) + splines::ns(xw_03, df = 7)), data = df_all)
+```
+
+
+### 3aii). These models are consistent with the regression portion. Did you experience any issues or warnings while fitting the generalized linear models?
+
+Not really, I just needed to make a new column in the data frame that was numeric. I also attempted to fit a model that had too many features so it threw an error as it occupied too much space
+
+
+### 3aiii). Which of the 9 models is the best? What performance metric did you use to make your selection?
+```{r, solution_3aiii}
+cat_all_metrics <- purrr::map2_dfr(list(cat_model_1, cat_model_2, cat_model_3,
+ 	cat_model_4, cat_model_5, cat_model_6, cat_model_7,
+ 	cat_model_8, cat_model_9),
+                               as.character(1:9),
+                               extract_metrics)
+
+cat_all_metrics %>% 
+  select(mod_name, df.null, AIC, BIC) %>% 
+  pivot_longer(!c("mod_name", "df.null")) %>% 
+  ggplot(mapping = aes(x = mod_name, y = value)) +
+  geom_point(size = 5) +
+  facet_wrap(~name, scales = "free_y") +
+  theme_bw()
+
+
+```
+### Need a performance metric here ###############################################
+
+
+### 3aiv). Visualize the coefficient summaries for your top 3 models
+```{r, solution_3iv}
+coefplot()
+coefplot()
+coefplot()
+```
+
+
+### 3av). How do the coefficient summaries compare between the top 3? Which inputs seem important?
+
+
+
+
+### 3bi). Fit 2 Bayesian linear models. One should be the best model and state the reason for choosing the second model.
+```{r, solution_3bi}
+
+```
+
+## State your reason for choosing your second bayesian model?
+
+I chose this model because it was the second best model according to the performance metric I used.
+
+### 3bii). Identify the best model
+
+
+
+### 3biii). Visualize the regression coefficient summaries for your best model
+```{r, solution_3biii}
+coefplot()
+```
+
+
+
+### 3ci). Make predictions with the 2 generalized linear models in order to visualize the trends of the event probability with respect to the inputs
+```{r, solution_3ci}
+
+```
+
 
 
 ### Template ######################################################################
