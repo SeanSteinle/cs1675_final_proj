@@ -84,4 +84,3 @@ M4 %>% readr::write_rds('models/nbM4.rds')
 #The most important features for M9 seemed to involve interactions with customers #D and K, which may indicate that their sentiment features are especially predictive in some way. 
 #M8's most influential features tended to be the inputs themselves (1st degree polys). M4's most influential features included region interactions with sentiment features, along with some
 #non-interactive terms as well.
-

@@ -31,7 +31,7 @@ contonly <- df %>%
   select(-rowid, -region, -customer, -outcome, -response, -outcomePredictable) %>%
   names()
 
-F1 <- as.formula(outcomePredictable ~ . - outcome - rowid) #formerly known as M3
+F1 <- as.formula(outcomePredictable ~ . - outcome - rowid - response) #formerly known as M3
 F2 <- as.formula(outcomePredictable ~ region + customer + (. - response - rowid - region - customer)^2)
 F3 <- as.formula(paste("outcomePredictable ~ ", paste(contonly, collapse = "+"), sep = "")) #formerly known as M2
 F4 <- as.formula(paste("outcomePredictable ~ region*(", paste(contonly, collapse = "+"), ")", sep = ""))#since M3 is already included, include M4
@@ -140,10 +140,14 @@ dotplot(all_results_roc)
 dev.off()
 
 #save best model
-M2 %>% readr::write_rds('models/best_class.rds')
+M1 %>% readr::write_rds('models/glm_norm_class.rds')
+M2 %>% readr::write_rds('models/glm_class.rds')
+M5 %>% readr::write_rds('models/glmnet_class.rds')
 
 #WRITE-UP:
 
-# The best model overall is the generalized linear model that contains all continuous and categorical features with continuous interactions. It has more uncertainty than other models
-# in regards to the ROC especially but also the accuracy. Its mean accuracy is the only one above 90%, with the others topping out around 84% (right around baseline). Interestingly, 
-# all of the models perform very similarly with regards to sensitivity, whereas the aforementioned best model is almost twice as specific as any other model.
+# It seems that the best model overall is the generalized linear model that contains all continuous and categorical features with continuous interactions. It has more uncertainty than other models
+# in regards to the ROC especially but also the accuracy. Its mean accuracy is the only one above 90%, with the others topping out around 84% (right around baseline). However, this models seems to be
+# badly overfit. Its coefficient values are very large and there is a great amount of uncertainty in its evaluation metrics, both signs of overfitting. Interestingly, 
+# all of the models perform very similarly with regards to sensitivity, whereas the aforementioned best model is almost twice as specific as any other model. Thus, we say that the simplest of
+# the next tier of models is the best, which would be M1, the glm() with continuous and categorical linear additive features.
